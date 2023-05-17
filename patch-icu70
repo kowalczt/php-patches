@@ -1,0 +1,28 @@
+--- breakiterator/codepointiterator_internal.cpp.orig	2021-09-21 10:24:05 UTC
++++ breakiterator/codepointiterator_internal.cpp
+@@ -75,7 +75,11 @@ CodePointBreakIterator::~CodePointBreakIterator()
+ 	clearCurrentCharIter();
+ }
+ 
++#if U_ICU_VERSION_MAJOR_NUM < 70
+ UBool CodePointBreakIterator::operator==(const BreakIterator& that) const
++#else
++bool CodePointBreakIterator::operator==(const BreakIterator& that) const
++#endif
+ {
+ 	if (typeid(*this) != typeid(that)) {
+ 		return FALSE;
+--- breakiterator/codepointiterator_internal.h.orig	2021-09-21 10:24:05 UTC
++++ breakiterator/codepointiterator_internal.h
+@@ -39,7 +39,11 @@ namespace PHP {
+ 
+ 		virtual ~CodePointBreakIterator();
+ 
++#if U_ICU_VERSION_MAJOR_NUM < 70
+ 		virtual UBool operator==(const BreakIterator& that) const;
++#else
++		virtual bool operator==(const BreakIterator& that) const;
++#endif
+ 
+ 		virtual CodePointBreakIterator* clone(void) const;
+ 
